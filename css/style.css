@@ -1,0 +1,87 @@
+
+*{
+    text-align: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: darkslategray
+}
+
+
+.board {
+    width: fit-content;
+    margin: auto;
+}
+
+td {
+    color: black; 
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    font-size: 25px;
+    border-radius: 10px;
+    box-shadow: 7px 3px 12px 2px #e9e9f0;   
+    background-color: darkgray ;
+}
+
+
+.marked {
+
+    background-color:red;
+}
+
+
+button {
+    color: #e9e9f0; 
+    font-size: 25px;
+    padding: 10px;
+    margin: 10px; 
+    width: 25%;
+    /* border: 5px solid goldenrod; */
+    border-radius: 10px;
+    text-align: center;
+    background-color: darkslategray;
+    border: 1px solid #e9e9f0;
+    font-style: italic;
+    box-shadow: 1px 2px 8px 4px #e9e9f0;
+
+}
+
+.level {
+    width: 450px;
+    height: 400px;
+    border: 5px solid #e9e9f0;
+    margin: 10px auto 30px;
+    border-radius: 20px;
+    text-align: center;
+
+}
+
+p {
+
+    font-size: 50px;
+}
+
+
+.modal {
+    font-size: 25px;
+    font-style: italic;
+    padding: 20px;
+    color: #e9e9f0;
+    background-color: rgb(230, 171, 189);
+    border: 2px solid #e9e9f0;
+    width: fit-content;
+    margin: auto;
+    text-align: center;
+    border-radius: 10px;
+    position: absolute;
+    top: 300px;
+    left: 200px;
+  
+    display: none;
+
+}
+
+.modal button {
+
+    width: 200px
+
+}
