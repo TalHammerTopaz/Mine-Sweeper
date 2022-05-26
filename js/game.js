@@ -1,6 +1,8 @@
 'use strict'
 
-window.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+
 
 //Global varibles:
 
@@ -19,6 +21,7 @@ var gGame = {
     shownCount: 0,
     markedCount: 0,
     startTime: 0,
+    hintOn: false,
 }
 
 var gLives = 3
@@ -26,9 +29,11 @@ var gLives = 3
 var gIntervalTime
 
 
-function initGame(){
-    console.log('we are on!')
 
+function initGame(){
+    console.log('yes???')
+
+    //reset global variables
     gGame.isOn = false
     gGame.shownCount = 0
     gGame.markedCount = 0
@@ -39,17 +44,41 @@ function initGame(){
     gLevel.SIZE = 4
     gLevel.MINES = 2
 
+    //build initial board
     gBoard= buildBoard()
     renderBoard(gBoard)
 
+    //render initial parameters
+    var elTime = document.querySelector("h2 span")
+    elTime.innerText = '0'
+
+    var elLives = document.querySelector('.lives')
+    elLives.innerText = '3'
+
+    //render buttns easy is colored
     var elBtns= document.querySelectorAll('button')  
     for (var i=0; i<elBtns.length; i++){
-        if (elBtns[i].innerText === 'Easy') elBtns[i].style.backgroundColor = "rgb(240, 10, 79)"
+        if (elBtns[i].innerText === 'Easy') elBtns[i].style.backgroundColor = ' rgb(201, 78, 78)'
         else elBtns[i].style.backgroundColor = "darkslategray"
         }
    
     
+    //update score
+    var bestEasy = localStorage.getItem('gBestTime.easy');
+    var elTimeEasy = document.querySelector('.easy')
+    elTimeEasy.innerText = bestEasy
 
+    var bestNormal = localStorage.getItem('gBestTime.normal');
+    var elTimeNormal = document.querySelector('.normal')
+    elTimeNormal.innerText = bestNormal
+
+    
+    var bestExpert = localStorage.getItem('gBestTime.expert');
+    var elTimeExpert = document.querySelector('.expert')
+    elTimeExpert.innerText = bestExpert
+ 
+ 
+ 
 }
 
 function buildBoard(rowIdx = 0, colIdx = 0) {
@@ -143,12 +172,18 @@ function renderBoard(board){
         strHTML += '</tbody></table>';
         var elBoard = document.querySelector(".board");
         elBoard.innerHTML = strHTML;
+
+     
 }
 
 
 function startGame(rowIdx, colIdx) {
     
+    
+    console.log(rowIdx)
+
     gGame.isOn = true
+    console.log('starting...')
 
     //build new board with no mine in first cel click
     gBoard= buildBoard(rowIdx, colIdx)
@@ -158,144 +193,177 @@ function startGame(rowIdx, colIdx) {
     //start the time
     gGame.startTime = Date.now() 
     gIntervalTime = setInterval(showTime, 1000)
- 
 
-}
-
-
-
-function cellClicked(event, elCell, i, j){
-
-    
- //   console.log('event.button:', event.button)
-
-    
-
-    //Flag or unflag ---> turn to right click later!!!!!!****!!!
-    if (event.button === 2 ){
-
-        // update the DOM based on the model before the change:
-    
-        elCell.innerText = gBoard[i][j].isMarked? '' : FLAG
-
-        // update Model:
-        if  (gBoard[i][j].isMarked){
-            gBoard[i][j].isMarked = false
-            gGame.markedCount--
-        } else{
-            gBoard[i][j].isMarked = true
-            gGame.markedCount++
-        }  
-
-        checkVictory ()
-        return
-    }
-
-    else if (event.button === 0 ){
-    console.log('LEFT!!')    
-    
-    if (!gGame.isOn) {
-            elCell.style.backgroundColor = 'green'
-            startGame(elCell, i,j)
-        }
-    
-    elCell.style.backgroundColor = 'white'
-
-     //check if already shown or marked
-      if (gBoard[i][j].isShown || gBoard[i][j].isMarked ) return
-
-    showCell(elCell, i, j)
-    }
-    
-}
-
-
-function showCell(elCell, rowIdx, colIdx){
-
-
-    console.log('showCell')
-    console.log(elCell)
-   
-   
-    if (gBoard[rowIdx][colIdx].isMine) {
-        
-        elCell.style.backgroundColor = 'red'
-        setTimeout (function() {elCell.style.backgroundColor = 'darkgray '}, 500)
-
-        //updtea model
-        gLives--
-
-        //update DOM
-        var elLives = document.querySelector('.lives')
-        elLives.innerText = gLives
-
-        if (gLives === 0) {
-            elCell.innerText =  MINE
-            elCell.style.backgroundColor = 'white'
-            gameOver()
-        }
-    
-        return
-    }
-         
-    // show cell content
-    //update model:
-    gBoard[rowIdx][colIdx].isShown = true
-    gGame.shownCount++
-
-    //update DOM:
-
-
-    var text = (gBoard[rowIdx][colIdx].isMine) ? MINE: 
-                        ((gBoard[rowIdx][colIdx].negsCount ) ? gBoard[rowIdx][colIdx].negsCount : '')
-
+  
+    var selector = `.cell-${rowIdx}-${colIdx}`
+    var elCell = document.querySelector(selector)
+    elCell.style.backgroundColor = 'white' 
+    var text = (gBoard[rowIdx][colIdx].negsCount ) ? gBoard[rowIdx][colIdx].negsCount : ''   
     elCell.innerText = text
-    elCell.style.backgroundColor = 'white'
 
-    console.log('gGame.shownCount', gGame.shownCount)
-    console.log(elCell)
 
-    if (gBoard[rowIdx][colIdx].negsCount === 0 ) expandShown(gBoard, elCell, rowIdx, colIdx)
+}
 
-    checkVictory ()
 
-    console.log(gBoard)
 
+function cellClicked(event, elCell, rowIdx, colIdx){
+    
+    document.addEventListener( "contextmenu", function(e) {
+        console.log(e)
+        if (e.button === -1) console.log('maybe')
+        })
+
+    if (!gGame.isOn) {
+        startGame(rowIdx ,colIdx) 
+        elCell.style.backgroundColor = 'white'
+        var text = (gBoard[rowIdx][colIdx].negsCount ) ? gBoard[rowIdx][colIdx].negsCount : ''   
+        elCell.innerText = text
+
+    }
+
+    if (gBoard[rowIdx][colIdx].isShown) return
+    
+    if (gGame.hintOn){
+        console.log('hint is on')
+        if (gBoard[rowIdx][colIdx].isMarked) return
+        showhint(rowIdx, colIdx)
+        return
+    }
+
+
+   
+    //Flag or unflag ---> turn to right click later!!!!!!****!!!
+    // if (event.button === 2 ){
+
+    if(confirm('Flag or Unglag?')) {    
+        console.log('RIGHT!!') 
+        if  (gBoard[rowIdx][colIdx].isMarked){
+            gBoard[rowIdx][colIdx].isMarked = false
+            gGame.markedCount--
+            elCell.innerText = ''
+
+        } else{
+            gBoard[rowIdx][colIdx].isMarked = true
+            gGame.markedCount++
+            elCell.innerText = FLAG
+        }  
+           
+           checkVictory ()
+           return
+        }
+   
+    //  else if (event.button === 0 ){
+    
+    else {
+        console.log('LEFT!!')    
+       
+        //check if already marked
+        if (gBoard[rowIdx][colIdx].isMarked ) return
+    
+        elCell.style.backgroundColor = 'white'
+  
+       showCell(elCell, rowIdx, colIdx)
+       }
+       
+   }
+   
+   
+function showCell(elCell, rowIdx, colIdx){
+    
+      
+       if (gBoard[rowIdx][colIdx].isMine) {
+           console.log('Im a mine')
+           gLives-- 
+           console.log('gLives', gLives)
+
+           var elLives = document.querySelector('.lives')
+           console.log(elLives)
+           elLives.innerText = gLives
+           
+            if (gLives === 0) {
+                elCell.innerText =  MINE
+                elCell.style.backgroundColor = 'white'
+                gameOver()
+                return
+            }
+                 
+            elCell.style.backgroundColor = ' rgb(201, 78, 78)'
+            setTimeout (function() {
+                        elCell.style.backgroundColor = 'darkgray '                 
+                        }, 500)
+        
+        return
+       }
+            
+       // show cell content
+       //update model:
+       gBoard[rowIdx][colIdx].isShown = true
+       gGame.shownCount++
+   
+       //update DOM:
+    
+    //    var text = (gBoard[rowIdx][colIdx].isMine) ? MINE: 
+    //                        ((gBoard[rowIdx][colIdx].negsCount ) ? gBoard[rowIdx][colIdx].negsCount : '')
+
+
+       var text = (gBoard[rowIdx][colIdx].negsCount ) ? gBoard[rowIdx][colIdx].negsCount : ''
+   
+       elCell.innerText = text
+       elCell.style.backgroundColor = 'white'
+   
+       console.log('gGame.shownCount', gGame.shownCount)
+       console.log(elCell)
+   
+       if (gBoard[rowIdx][colIdx].negsCount === 0 ) expandShown(gBoard, elCell, rowIdx, colIdx)
+   
+       checkVictory ()
+   
+       console.log(gBoard)
+   
 }
 
 function checkVictory () {
 
     if (gGame.markedCount === gLevel.MINES && 
         gGame.shownCount === gLevel.SIZE**2 - gLevel.MINES ) {
+       
         console.log('Win!!')
+        
         gGame.isOn = false
+        var time = ((Date.now() -gGame.startTime)/1000).toFixed()  
         clearInterval(gIntervalTime)
-        showModal('You Won!! ')
 
+        var elImg = document.querySelector('img')
+        elImg.src = "img/happy.jpg"    
+        console.log(time)  
+
+
+        if (gLevel.SIZE === 4) {
+            localStorage.setItem('gBestTime.easy', time )
+            var elTimeEasy = document.querySelector('.easy')
+            elTimeEasy.innerText = time
+        }    
+        else if (gLevel.SIZE === 8) {
+            localStorage.setItem('gBestTime.normal', time)
+            var elTimeNormal = document.querySelector('.normal')
+            elTimeNormal.innerText = time    
         }
-
+        else if (gLevel.SIZE === 12) {
+            localStorage.setItem('gBestTime.expert', time)
+            var elTimeExpert = document.querySelector('.expert')
+            elTimeExpert.innerText = time
+        }
+    }
 }
 
 function gameOver(){
     console.log('You Lost!!')
     clearInterval(gIntervalTime)
+
     gGame.isOn = false
-    showModal('You Lost:( ')
+    var elImg = document.querySelector('img')
+    elImg.src = "img/upset.jpg"    
 }
-
-
-function showModal(msg){
-    console.log(msg)
-    var elModal = document.querySelector('.modal')
-    elModal.style.display = "block"
-    var elMsg = document.querySelector('.modal p')
-    elMsg.innerText = msg
-
-
-}
-
-
-
 
 
 function expandShown(board, elCell, rowIdx, colIdx){
@@ -334,7 +402,6 @@ function showTime(){
 }
 
 
-
 function levelchoise(elBtn){
 
     if (gGame.isOn) return
@@ -364,13 +431,78 @@ function levelchoise(elBtn){
     for (var i=0; i<elBtns.length; i++){
         elBtns[i].style.backgroundColor = "darkslategray"
         }
-    elBtn.style.backgroundColor = "rgb(240, 10, 79)"
+    elBtn.style.backgroundColor = ' rgb(201, 78, 78)'
 }
 
 function restart(){
-    var elModal = document.querySelector('.modal')
-    elModal.style.display = "none"
-    initGame()
+    if(gGame.isOn) return
+    
+    var elImg = document.querySelector('img')
+    elImg.src = "img/smile.jpg"  
+
+    initGame()  
+
+
 }
 
+function hint(elHint){
+
+    if (!gGame.isOn) return
+
+    elHint.classList.add("highlight")
+
+    gGame.hintOn = true
+  
+
+}
+
+function showhint(rowIdx, colIdx){
+
+
+    for(var i = rowIdx - 1; i <= rowIdx + 1; i++){
+        if(i < 0 || i >= gBoard.length) continue
+
+        for(var j = colIdx - 1; j <= colIdx + 1; j++){
+            if(j < 0 || j >= gBoard[0].length) continue
+
+            if (gBoard[i][j].isShown || gBoard[i][j].isMarked) continue
+
+            var selector = `.cell-${i}-${j}`
+            var cellToShow = document.querySelector(selector)
+
+            cellToShow.innerText = (gBoard[i][j].isMine )? MINE :
+                                (gBoard[i][j].negsCount ) ? gBoard[i][j].negsCount : ''
+            cellToShow.style.backgroundColor = "lightcyan"
+            setTimeout(unshow, 1000, i, j )
+
+        }
+    }
+    //unshowing the hint:
+
+    gGame.hintOn = false
+
+    var hints = document.querySelectorAll(".hint")
+    
+    for (var i=0; i<hints.length; i++){
+        if (hints[i].classList.contains("highlight")){
+            console.log('found it')
+             setTimeout(unshowHint, 1000, hints[i] )
+    }
+    }
+}
+
+function unshow(rowIdx, colIdx){
+    var selector = `.cell-${rowIdx}-${colIdx}`
+    var elCell = document.querySelector(selector)
+    elCell.innerText = ''
+    elCell.style.backgroundColor = "darkgray"   
+
+}
+
+
+function unshowHint(elHint){
+    elHint.innerText = ''
+    elHint.classList.remove("highlight")
+
+}
 
