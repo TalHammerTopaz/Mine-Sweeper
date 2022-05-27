@@ -27,6 +27,7 @@ body {
 }
 
 h1 {
+    margin-top: 0;
     color: rgb(201, 78, 78);
     font-size: 50px;
 }
@@ -48,6 +49,9 @@ td {
     background-color: darkgray ;
 }
 
+.board:hover {
+    cursor: grab;
+}
 
 button {
     color: #e9e9f0; 
@@ -70,17 +74,18 @@ button {
     width: 400px;
     height: 90px;
     /* border: 5px solid #e9e9f0; */
-    margin: 0px auto 30px;
+    margin: 0px auto 5px;
     padding: 5px;
     border-radius: 20px;
     text-align: center;
     background-color:white;
     opacity: 1;
+ 
 
 }
 
 p {
-
+    margin-top: 0px;
     font-size: 30px;
     display: inline-block;
     text-align: left;
@@ -89,15 +94,17 @@ p {
 }
 
 h2 {
-    display: inline-block;
-    text-align: right;
-    width: 30%;
+    margin-top: 0px;
+    display: block;
+    text-align: center;
     font-weight: lighter;
+ 
 }
 
 img {
     text-align: center;
     margin: auto;
+    margin-bottom: 15px;
     display: block;
     transition: 5s;
     box-shadow: 1px 2px 8px 4px #929793;
@@ -112,6 +119,7 @@ img {
 
 .highlight {
     background: radial-gradient( #E8C579 33%, #fff 100%);
+    box-shadow: 1px 2px 8px 4px #929793;
 
 }
 
@@ -119,6 +127,82 @@ img {
     width:fit-content ;
 }
 
-.heart {
+.heart  {
+
     font-size: 25px;
+}
+
+.safeclick {
+    text-align: right;
+}
+
+.sevenboom {
+    margin: 0;
+    font-size: 25px;
+    font-weight: lighter;
+    text-align: center;
+    font-family: Comic Sans MS, Comic Sans, cursive ;
+
+}
+
+.manual {
+    font-size: 20px;
+    font-family: Comic Sans MS, Comic Sans, cursive ;
+    width: 42%;
+    text-align: center;
+}
+
+.undo {
+  
+    font-weight: lighter;
+    font-family: Comic Sans MS, Comic Sans, cursive ;
+    width: 30%
+}
+
+.sevenligthed {
+    background: radial-gradient( #ecb02c 33%, #fff 100%);
+    padding: 3px;
+    box-shadow: 1px 2px 8px 4px #929793;
+
+
+}
+
+.manualligthed {
+    background: radial-gradient( azure 33%, #fff 100%);
+    padding: 3px;
+    box-shadow: 1px 2px 8px 4px #929793;
+
+
+}
+
+.modal {
+    color: #e9e9f0; 
+    font-size: 20px;
+    padding: 5px;
+    margin: auto; 
+    width: 70px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: rgb(201, 78, 78) ;
+    border: none;
+    box-shadow: 1px 2px 8px 4px #929793;
+
+    position: absolute;
+    left:66%;
+    top:35%;
+
+
+
+
+    display: none;
+
+}
+
+.modal-item {
+    border: 1px solid #e9e9f0;
+    border-radius: 20%;
+    background-color: #e9e9f0 ;
+    box-shadow: 1px 2px 8px 4px #929793;
+    margin: 10px;
+
 }

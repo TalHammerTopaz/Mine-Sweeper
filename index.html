@@ -13,11 +13,19 @@
     <div class="container">        
         <h1>Mine Sweeper</h1>
         <img src="img/smile.jpg" onclick="restart()"/>
+
         <p class = "heart"> 💚 <span class = "lives">3</span></p>
         <p  class = "hint" onclick="hint(this)">💡</p>
         <p  class = "hint" onclick="hint(this)">💡</p>
-        <p  class = "hint" onclick="hint(this)">💡</p>
+        <p  class = "hint" onclick="hint(this)">💡         </p>
+        <p class = "safeclick"  onclick= "safeclick()"> 🧚 <span class = "safeclicks" >3</span></p>
+        
         <h2>Time: <span>0</span> sec</h2>
+        
+        <p class = "sevenboom" onclick= "sevenboom(this)">7️⃣💣  </p>
+        <p class = "undo"  onclick= "undo()">|   🔙</p>
+        <p class = "manual"  onclick= "manualycreate(this)"> 👇 Manualy Create</p>
+        
         <div class=" level">
             <button onclick = "levelchoise(this)"  >Easy</button>
             <button onclick = "levelchoise(this)"  >Normal</button>
@@ -25,8 +33,13 @@
         </div>
         
         <div class = "board"></div>
+        
         <h4 class = "best-score"> Best Score|  Easy <span class = "easy"></span> | Normal <span class = "normal"></span> | Expert <span class = "expert"></span> | Sec</h4>
     
+        <div class = modal>
+            <h3 class ="modal-item mineset" onclick = "setmine(this)">💣</h3>
+            <h3 class ="modal-item startmanual" onclick = "startmanualgame()">▶️</h3>
+        </div>
     </div>
  
    
