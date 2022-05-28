@@ -317,6 +317,7 @@ function cellClicked(event, elCell, rowIdx, colIdx){
    
 function flag(elCell, rowIdx, colIdx) {
 
+    if (!gGame.isOn) return
 
     if  (gBoard[rowIdx][colIdx].isShown) return
         
@@ -488,6 +489,8 @@ function levelchoise(elBtn){
 
     if (gGame.isOn) return
 
+    if(!gGame.readyToPlay) return
+
     var level = elBtn.innerHTML
       
     if (level === "Easy") {
@@ -594,6 +597,8 @@ function unshowHint(elHint){
 
 function safeclick(){
 
+    if(!gGame.isOn) return
+
     if (gGame.hintOn) return
 
     if (gGame.safeclick === 0)    return
@@ -627,6 +632,8 @@ function sevenboom(elBtn){
 
     if (gGame.isOn) return
 
+    if(!gGame.readyToPlay) return
+
     elBtn.classList.toggle("sevenligthed" )
 
     if(gGame.sevenBoom){
@@ -654,6 +661,8 @@ function manualycreate(elBtn){
         gGame.manualycreate = false
         var elModal = document.querySelector('.modal')
         elModal.style.display = "none"
+
+        initGame()
         return
     }
 
